@@ -113,19 +113,6 @@ error_check
 timestamp=$(date '+%d.%m.%Y %H:%M:%S')
 email_infomsg+="$timestamp Backup finished successfully"
 
-#FINISHED=false
-#while [[ "$FINISHED" == "false" ]]
-#do
-#	ps awx |grep HyperBackup | grep backup > /dev/null
-#	if [ $? -ne 0 ]
-#	then
-#		FINISHED="true"
-#	else
-#		sleep 30
-#	fi
-#done
-
-
 #shutdown remote server
 ssh $sshUser@$sshIP 'sudo shutdown -h now' &>/dev/null
 #if [ $? -ne 0 ]

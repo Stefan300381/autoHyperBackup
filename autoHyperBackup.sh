@@ -113,13 +113,21 @@ error_check
 timestamp=$(date '+%d.%m.%Y %H:%M:%S')
 email_infomsg+="$timestamp Backup finished successfully"
 
-#shutdown remote server
-ssh $sshUser@$sshIP 'sudo shutdown -h now' &>/dev/null
-#if [ $? -ne 0 ]
-#then
-#	email_errormsg+="ERROR: Remote server shutdown failed\n"
-#    email_errormsg+="CMD: ssh $sshUser@$sshIP 'sudo shutdown -h now'\n"
-#	email_errormsg+="EXITCODE: $?\n"
-#fi
+#after backup historic data might get wiped, check for existing img_backup process
+while true; do 
+    if ! pidof "img_backup" > /dev/null 2>&1; then
+        #shutdown remote server
+        ssh $sshUser@$sshIP 'sudo shutdown -h now' &>/dev/null
+        #if [ $? -ne 0 ]
+        #then
+        #   email_errormsg+="ERROR: Remote server shutdown failed\n"
+        #    email_errormsg+="CMD: ssh $sshUser@$sshIP 'sudo shutdown -h now'\n"
+        #   email_errormsg+="EXITCODE: $?\n"
+        #fi
 
-send_email
+        send_email
+        break
+    else
+        sleep 60
+    fi
+done
